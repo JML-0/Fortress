@@ -10,6 +10,7 @@
 
 int * creerTableau();
 void afficherTableau(int* tableau);
+void jouer(int* tableau);
 
 int main(void) {
     int * tableau = creerTableau();
@@ -28,6 +29,7 @@ int main(void) {
     printf("Tour au Sud -> %d\n", test[S]);
     printf("Tour a l'Ouest -> %d\n", test[O]);
     
+    jouer(tableau);
 }
 
 int * creerTableau()
@@ -93,6 +95,41 @@ void afficherTableau(int* tableau) {
         printf("\n");
     }
 
-    printf("\nRAPPEL: 0 = tour morte | 1, 2, 3 = tour joueur 1 | -1, -2, -3 = tour IA\n");
+    //printf("\nRAPPEL: 0 = tour morte | 1, 2, 3 = tour joueur 1 | -1, -2, -3 = tour IA\n");
 
+}
+
+void jouer(int* tableau) {
+    int joue = 1;
+
+    while(joue) {
+        int ok = 1;
+        afficherTableau(tableau);
+
+        while(ok) {
+
+            int x, y;
+            do {
+                printf("\nCoordonnée X: ");
+                scanf("%d", &x);
+            } while(x >= LENGTH);
+            
+            do {
+                printf("\nCoordonnée Y: ");
+                scanf("%d", &y);
+            } while(y >= WIDTH);
+            
+            int valeur = tableau[(y * WIDTH) + x];
+            if(valeur >= 0 && valeur < 3) {
+                tableau[(y * WIDTH) + x]++;
+                ok = 0;
+            }
+
+            if(ok == 1) {
+                printf("\nVeuillez rejouer sur une autre case\n");
+            }
+        }
+        
+        //Faire jouer l'IA ici
+    }
 }
