@@ -17,12 +17,12 @@ int main(void) {
     afficherTableau(tableau);
 
     Point p;
-    p.x = 4;
-    p.y = 1;
-    printf("Index de la case du point (%d,%d) ---> %d\n", p.x, p.y, caseIsAvailable(p, tableau));
+    p.x = 0;
+    p.y = 7;
+    printf("Adresse de la case du point (%d,%d) ---> %p\n", p.x, p.y, caseIsAvailable(p, tableau));
 
     int * test;
-    test = NextTowers(p, tableau);
+    test = nextTowers(p, tableau);
     printf("Tour au Nord -> %d\n", test[N]);
     printf("Tour a l'Est -> %d\n", test[E]);
     printf("Tour au Sud -> %d\n", test[S]);
@@ -36,8 +36,8 @@ int * creerTableau()
     int * tab = malloc(sizeof(int) * size);
 
     //tab[5] = 1; //T1
-    tab[12] = 1; //TT1
-    //tab[22] = -3; //TTT2
+    tab[56] = 1; //TT1
+    //tab[2] = -3; //TTT2
 
     return tab;
 }
