@@ -19,7 +19,15 @@ int main(void) {
     Point p;
     p.x = 4;
     p.y = 1;
-    printf("-----> %d\n", caseIsAvailable(p, tableau));
+    printf("Index de la case du point (%d,%d) ---> %d\n", p.x, p.y, caseIsAvailable(p, tableau));
+
+    int * test;
+    test = NextTowers(p, tableau);
+    printf("Tour au Nord -> %d\n", test[N]);
+    printf("Tour a l'Est -> %d\n", test[E]);
+    printf("Tour au Sud -> %d\n", test[S]);
+    printf("Tour a l'Ouest -> %d\n", test[O]);
+    
 }
 
 int * creerTableau()

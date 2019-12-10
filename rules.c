@@ -1,5 +1,6 @@
 #include "rules.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 /*
  * Vérifie si une case est disponible (-1) ou pas (t[index])
@@ -18,40 +19,56 @@ int caseIsAvailable(Point P, int * T)
 }
 
 /*
+ * Retourne un tableau contenant les infos si une ou plusieurs tours se trouvent autour
+ * NULL = hors tableau
+ * 1 = tour a coter
+ * 0 = pas de tour
  * x - 1 = Ouest
  * x + 1 = Est
  * y - 1 = Nord
  * y + 1 = Sud
  */
-int NextTowers(Point P, int * T)
+int * NextTowers(Point P, int * T)
 {
-    Point p; Direction d;
+    Point p; p.x = P.x; p.y = P.y;
+    int * R;
+    R = (int *) malloc(sizeof(int) * 4);
 
-    if (!P.x && !P.y) //(0,0)
-    {
-        p.x = P.x + 1; p.y = P.y;
-        if (caseIsAvailable(p, T) != -1)
-            return d = E;
-    }
+    p.y -= 1;
+    printf("x:%d   y:%d\n", p.x, p.y);
+    if (p.y < 0) R[N] = (int)NULL;
+    else
+    if (caseIsAvailable(p, T) == -1)
+        R[N] = 0;
+    else
+        R[N] = 1;
 
-    if (P.x && !P.y) //(x,0)
-    {
-        
-    }
-
-    p.x -= 1; p.y = P.y;
-    if (caseIsAvailable(p, T) != -1)
-        return d = O;
+    p.y += 1; p.x += 1;
+    printf("x:%d   y:%d\n", p.x, p.y);
+    if (p.x > LENGTH) R[E] = (int)NULL;
+    else
+    if (caseIsAvailable(p, T) == -1)
+        R[E] = 0;
+    else
+        R[E] = 1;
     
-    p.x += 2;
-    if (caseIsAvailable(p, T) != -1)
-        return d = E;
+    p.y += 1; p.x -= 1;
+    printf("x:%d   y:%d\n", p.x, p.y);
+    if (p.y > WIDTH) R[S] = (int)NULL;
+    else
+    if (caseIsAvailable(p, T) == -1)
+        R[S] = 0;
+    else
+        R[S] = 1;
     
-    p.x = P.x; p.y -= 1;
-    if (caseIsAvailable(p, T) != -1)
-        return d = N;
+    p.y -= 1; p.x -= 1;
+    printf("x:%d   y:%d\n", p.x, p.y);
+    if (p.x < 0) R[O] = (int)NULL;
+    else
+    if (caseIsAvailable(p, T) == -1)
+        R[O] = 0;
+    else
+        R[O] = 1;
     
-    p.y += 2;
-    if (caseIsAvailable(p, T) != -1)
-        return d = S;
+    return R;
 }
