@@ -22,9 +22,12 @@ int * caseIsAvailable(Point P, int * T)
 
 /*
  * Retourne un tableau contenant les infos si une ou plusieurs tours se trouvent autour
- * NULL = hors tableau
- * 1 = tour a coter
+ * Si une tour se trouve à coter, on stock un pointeur de celle-ci
+ * 
+ * -1 = hors tableau
+ * *pointeur = tour a coter
  * 0 = pas de tour
+ * 
  * x - 1 = Ouest
  * x + 1 = Est
  * y - 1 = Nord
@@ -33,44 +36,56 @@ int * caseIsAvailable(Point P, int * T)
 int * nextTowers(Point P, int * T)
 {
     Point p; p.x = P.x; p.y = P.y;
-    int * R;
+    int * R, * ptr;
     R = (int *) malloc(sizeof(int) * 4);
 
     p.y -= 1;
+    ptr = caseIsAvailable(p, T);
+
     printf("x:%d   y:%d\n", p.x, p.y);
+
     if (p.y < 0) R[N] = -1;
     else
-    if (!caseIsAvailable(p, T))
+    if (!ptr)
         R[N] = 0;
     else
-        R[N] = 1;
+        R[N] = *ptr;
 
     p.y += 1; p.x += 1;
+    ptr = caseIsAvailable(p, T);
+
     printf("x:%d   y:%d\n", p.x, p.y);
+
     if (p.x > LENGTH - 1) R[E] = -1;
     else
-    if (!caseIsAvailable(p, T))
+    if (!ptr)
         R[E] = 0;
     else
-        R[E] = 1;
+        R[E] = *ptr;
     
     p.y += 1; p.x -= 1;
+    ptr = caseIsAvailable(p, T);
+
     printf("x:%d   y:%d\n", p.x, p.y);
+
     if (p.y > WIDTH - 1) R[S] = -1;
     else
-    if (!caseIsAvailable(p, T))
+    if (!ptr)
         R[S] = 0;
     else
-        R[S] = 1;
+        R[S] = *ptr;
     
     p.y -= 1; p.x -= 1;
+    ptr = caseIsAvailable(p, T);
+
     printf("x:%d   y:%d\n", p.x, p.y);
+
     if (p.x < 0) R[O] = -1;
     else
-    if (!caseIsAvailable(p, T))
+    if (!ptr)
         R[O] = 0;
     else
-        R[O] = 1;
+        R[O] = *ptr;
     
     return R;
 }

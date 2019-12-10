@@ -37,7 +37,7 @@ int * creerTableau()
 
     //tab[5] = 1; //T1
     tab[56] = 1; //TT1
-    //tab[2] = -3; //TTT2
+    tab[57] = -3; //TTT2
 
     return tab;
 }
