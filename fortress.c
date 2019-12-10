@@ -4,16 +4,12 @@
     - 0 = tour morte ou case vide | 1, 2, 3 = tour joueur 1 | -1, -2, -3 = tour IA
 */
 
-#include "fortress.h"
 #include "rules.h"
 #include <stdlib.h>
 #include <stdio.h>
 
-int* creerTableau();
+int * creerTableau();
 void afficherTableau(int* tableau);
-
-#define HAUTEUR 8
-#define LONGUEUR 8
 
 int main(void) {
     int * tableau = creerTableau();
@@ -21,38 +17,35 @@ int main(void) {
     afficherTableau(tableau);
 
     Point p;
-    p.x = 5;
+    p.x = 4;
     p.y = 1;
     printf("-----> %d\n", caseIsAvailable(p, tableau));
 }
 
-int* creerTableau() {
-    int taille = (HAUTEUR * LONGUEUR) - 1;
-    int* tab = malloc(sizeof(int) * taille);
+int * creerTableau()
+{
+    int size = (WIDTH * LENGTH) - 1;
+    int * tab = malloc(sizeof(int) * size);
 
-    //Le remplir de case vide
-    for(int i = 0; i < (taille + 1); i++)
-        tab[i] = 0;
-
-    tab[5] = 1; //T1
-    tab[12] = 2; //TT1
-    tab[22] = -3; //TTT2
+    //tab[5] = 1; //T1
+    tab[12] = 1; //TT1
+    //tab[22] = -3; //TTT2
 
     return tab;
 }
 
 void afficherTableau(int* tableau) {
     printf("[Y/X]");
-    for(int ia = 0; ia < LONGUEUR; ia++)
+    for(int ia = 0; ia < LENGTH; ia++)
             printf("( %d )", ia);
     
     printf("\n");
 
-    for(int i = 0; i < HAUTEUR; i++) {
+    for(int i = 0; i < WIDTH; i++) {
 
-        printf("(%d) |", i);
-        for(int ib = 0; ib < LONGUEUR; ib++) {
-            switch(tableau[(i * HAUTEUR) + ib]) {
+        printf("(%d)  |", i);
+        for(int ib = 0; ib < LENGTH; ib++) {
+            switch(tableau[(i * WIDTH) + ib]) {
                 case -1:
                     printf("T2  |");
                     break;
@@ -86,7 +79,7 @@ void afficherTableau(int* tableau) {
 
         printf("\n     ");
 
-        for(int ia = 0; ia < LONGUEUR * 5; ia++)
+        for(int ia = 0; ia < LENGTH * 5; ia++)
             printf("-");
 
         printf("\n");
