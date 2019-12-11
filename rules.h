@@ -15,7 +15,9 @@ typedef struct Point
   int x, y;  
 } Point;
 
-extern int * caseIsAvailable(Point P, int * T);
+extern int caseIsAvailable(Point P, int * T);
 extern int * nextTowers(Point P, int * T);
+extern int * getAddressTowerDirection(Point P, int * T, Direction D);
+extern int * show(int * T);
 
 #endif
