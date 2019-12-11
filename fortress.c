@@ -11,6 +11,7 @@
 int * creerTableau();
 void afficherTableau(int* tableau);
 void jouer(int* tableau);
+void ia(int* tableau);
 
 int main(void) {
     int * tableau = creerTableau();
@@ -171,6 +172,49 @@ void jouer(int* tableau) {
             }
         }
         
-        //Faire jouer l'IA ici
+        ia(tableau);
     }
+}
+
+void ia(int* tableau) {
+    //Positionner la tour dans une case proche aux maximums des cases positives
+    Point poisitionParfaite, testPosition;
+    int meilleurPositionNmbCotes = 0, test = 0;
+    int* tableauNew = show(tableau);
+
+    for(int i = 0; i < WIDTH; i++) {
+        for(int ib = 0; ib < LENGTH; ib++) {
+            test = 0;
+            testPosition.x = ib;
+            testPosition.y = i;
+
+            if((ib - 1) >= 0) {
+                printf("%d - ", tableauNew[(i * WIDTH) + (ib - 1)]);
+                if(tableauNew[(i * WIDTH) + (ib - 1)] > 0 && tableauNew[(i * WIDTH) + (ib - 1)] <= 4)
+                    test++;
+            }
+                
+            if((ib + 1) < WIDTH) {
+                if(tableauNew[(i * WIDTH) + (ib + 1)] > 0 && tableauNew[(i * WIDTH) + (ib + 1)] <= 4)
+                    test++;
+            }
+
+            if((i + 1) >= 0) {
+                if(tableauNew[((i + 1) * WIDTH) + ib] > 0 && tableauNew[((i + 1) * WIDTH) + ib] <= 4)
+                    test++;
+            }
+
+            if((i - 1) < LENGTH) {
+                if(tableauNew[((i - 1) * WIDTH) + ib] > 0 && tableauNew[((i - 1) * WIDTH) + ib] <= 4)
+                    test++;
+            }
+
+            if(caseIsAvailable(testPosition, tableau) && test > meilleurPositionNmbCotes) {
+                poisitionParfaite = testPosition;
+            }
+        }
+    }
+
+    printf("X: %d, Y: %d", poisitionParfaite.x, poisitionParfaite.y);
+    tableau[(poisitionParfaite.y * WIDTH) + poisitionParfaite.x] -= 10;
 }
