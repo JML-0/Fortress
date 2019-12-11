@@ -136,7 +136,7 @@ void afficherTableau(int* tableau) {
         printf("\n");
     }
 
-    printf("\nRAPPEL: 0 = tour morte | 1, 2, 3 = tour joueur 1 | -1, -2, -3 = tour IA\n");
+    //printf("\nRAPPEL: 0 = tour morte | 1, 2, 3 = tour joueur 1 | -1, -2, -3 = tour IA\n");
 
 }
 
@@ -162,7 +162,6 @@ void jouer(int* tableau) {
             
             int valeur = tableau[(y * WIDTH) + x];
             if(valeur >= 0 && valeur < 30) {
-                printf("KKKKKKKKK -> %d\n", valeur);
                 tableau[(y * WIDTH) + x] += 10;
                 ok = 0;
             }
