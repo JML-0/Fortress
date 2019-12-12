@@ -4,12 +4,34 @@
 #include <assert.h>
 
 /*
+ * Retoune l'index du point donné
+ */
+int getIndex(Point P) { return (P.y * WIDTH) + P.x; } 
+
+/*
+ * Retourne l'index du point donné en fonction d'une direction
+ */
+int getIndexDirection(Point P, Direction D)
+{
+    switch (D)
+    {
+    case N:
+        return ((P.y - 1 ) * LENGTH) + P.x;
+    case E:
+        return (P.y * LENGTH) + P.x + 1;
+    case S:
+        return ((P.y + 1) * LENGTH) + P.x;
+    case O:
+        return (P.y * LENGTH) + P.x - 1;
+    }
+}
+
+/*
  * Vérifie si une case est disponible (1) ou pas (0)
  */
 int caseIsAvailable(Point P, int * T)
 {
-    int index = (P.y * LENGTH) + P.x;
-    switch (T[index])
+    switch (T[getIndex(P)])
     {
         case -300 ... -100:
             return 0;
@@ -62,28 +84,11 @@ int * nextTowers(Point P, int * T)
 }
 
 /*
- * Retoune l'index du point donné
+ * Détermine la valeur des cases
+ * Si une case est égale à 0 suite à une opération, on met 99
+ * pour faire la différence avec une case vide
+ * S -> Signe -> 1 = + / 0 = -
  */
-int getIndex(Point P) { return (P.y * WIDTH) + P.x; } 
-
-/*
- * Retourne l'index du point donné en fonction d'une direction
- */
-int getIndexDirection(Point P, Direction D)
-{
-    switch (D)
-    {
-    case N:
-        return ((P.y - 1 ) * LENGTH) + P.x;
-    case E:
-        return (P.y * LENGTH) + P.x + 1;
-    case S:
-        return ((P.y + 1) * LENGTH) + P.x;
-    case O:
-        return (P.y * LENGTH) + P.x - 1;
-    }
-}
-
 void setValue(Point P, Direction D, int * T, int * R, int S)
 {
     if (S)
@@ -108,6 +113,46 @@ void setValue(Point P, Direction D, int * T, int * R, int S)
     }
 }
 
+/*
+ * Supprime les tours lorsqu'elles ne dominent pas l'adversaire
+ */
+void deleteTowers(int * T)
+{
+    Point P;
+    int Tower, TN, TE, TS, TO, Total;
+    int * _nextTowers;
+
+    _nextTowers = malloc(sizeof(int) * 4);  assert(_nextTowers);
+
+    for (int i = 0; i < WIDTH; i++)
+    {
+        for (int j = 0; j < LENGTH; j++)
+        {
+            P.x = j; P.y = i;
+            Tower = T[getIndex(P)]; //Tour actuelle;
+            TN = TE = TS = TO = 0;          //Tour Nord Est Sud Ouest
+            _nextTowers = nextTowers(P, T);
+
+            if (_nextTowers[N] == 0) TN = T[getIndexDirection(P, N)];  //
+            if (_nextTowers[E] == 0) TE = T[getIndexDirection(P, E)];  //  Valeur des tours si présentes
+            if (_nextTowers[S] == 0) TS = T[getIndexDirection(P, S)];  //
+            if (_nextTowers[O] == 0) TO = T[getIndexDirection(P, O)];  //
+
+            Total = TN + TE + TS + TO; //Somme des valeurs des tours adjacentes
+
+            if ((Tower > 0) && (Tower + Total < 0)) //Tour +
+                T[getIndex(P)] = Total / 100;
+
+            if ((Tower < 0) && (Tower + Total > 0)) // Tour -
+                T[getIndex(P)] = Total / 100;
+        }        
+    }
+    free(_nextTowers);
+}
+
+/*
+ * Rempli puis retourne un tableau avec les tours ainsi que leurs cases
+ */
 int * show(int * T)
 {
     Point p;
@@ -163,41 +208,4 @@ int * show(int * T)
     free(_nextTowers);
 
     return R;
-}
-
-/*
- * Supprime les tours lorsqu'elles ne dominent pas l'adversaire
- */
-void deleteTowers(int * T)
-{
-    Point P;
-    int Tower, TN, TE, TS, TO, Total;
-    int * _nextTowers;
-
-    _nextTowers = malloc(sizeof(int) * 4);  assert(_nextTowers);
-
-    for (int i = 0; i < WIDTH; i++)
-    {
-        for (int j = 0; j < LENGTH; j++)
-        {
-            P.x = j; P.y = i;
-            Tower = T[getIndex(P)]; //Tour actuelle;
-            TN = TE = TS = TO = 0;          //Tour Nord Est Sud Ouest
-            _nextTowers = nextTowers(P, T);
-
-            if (_nextTowers[N] == 0) TN = T[getIndexDirection(P, N)];  //
-            if (_nextTowers[E] == 0) TE = T[getIndexDirection(P, E)];  //  Valeur des tours si présentes
-            if (_nextTowers[S] == 0) TS = T[getIndexDirection(P, S)];  //
-            if (_nextTowers[O] == 0) TO = T[getIndexDirection(P, O)];  //
-
-            Total = TN + TE + TS + TO; //Somme des valeurs des tours adjacentes
-
-            if ((Tower > 0) && (Tower + Total < 0)) //Tour +
-                T[getIndex(P)] = Total / 100;
-
-            if ((Tower < 0) && (Tower + Total > 0)) // Tour -
-                T[getIndex(P)] = Total / 100;
-        }        
-    }
-    free(_nextTowers);
 }

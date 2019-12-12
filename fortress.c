@@ -5,6 +5,7 @@
 */
 
 #include "rules.h"
+#include "controls.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -90,7 +91,6 @@ void afficherTableau(int* tableau) {
                     printf("    |");
                     break;
             }
-            //printf(" %d |", tableau[(i * HAUTEUR) + ib]);
         }
 
         printf("\n     ");
@@ -100,24 +100,12 @@ void afficherTableau(int* tableau) {
 
         printf("\n");
     }
-
-    //printf("\nRAPPEL: 0 = tour morte | 1, 2, 3 = tour joueur 1 | -1, -2, -3 = tour IA\n");
-
-}
-
-int playerStillHaveTowers(int* tableau) {
-    for(int i = 0; i < WIDTH; i++)
-        for(int ib = 0; ib < LENGTH; ib++) {
-            if(tableau[(i * WIDTH) + ib] >= 0 && tableau[(i * WIDTH) + ib] <= 300) {
-                return 1;
-            }
-        }
-
-    return 0;
 }
 
 void jouer(int* tableau) {
+    Point P;
     int joue = 1;
+    int _caseValue = 0;
 
     while(joue) {
         int ok = 1;
@@ -125,28 +113,19 @@ void jouer(int* tableau) {
 
         while(ok) {
 
-            int x, y;
             do {
                 printf("\nCoordonnée X: ");
-                scanf("%d", &x);
-            } while(x >= LENGTH);
+                scanf("%d", &P.x);
+            } while(P.x >= LENGTH);
             
             do {
                 printf("\nCoordonnée Y: ");
-                scanf("%d", &y);
-            } while(y >= WIDTH);
+                scanf("%d", &P.y);
+            } while(P.y >= WIDTH);
             
-            int valeur = tableau[(y * WIDTH) + x];
-            if((valeur >= 0) && (valeur < 100)) {
-                tableau[(y * WIDTH) + x] += 100 - valeur;
-                ok = 0;
-            }
-            if(valeur >= 100 && valeur < 300) {
-                tableau[(y * WIDTH) + x] += 100;
-                ok = 0;
-            }
-            if(valeur == -1){
-                tableau[(y * WIDTH) + x] += 101;
+            _caseValue = caseValue(P, tableau);
+            if(_caseValue) {
+                tableau[getIndex(P)] = _caseValue;
                 ok = 0;
             }
 
