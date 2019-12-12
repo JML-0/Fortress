@@ -145,7 +145,7 @@ void jouer(int* tableau) {
             }
         }
         
-        //ia(tableau);
+        ia(tableau);
     }
 }
 
@@ -163,25 +163,25 @@ void ia(int* tableau) {
             int* tableauPos = nextTowers(testPosition, tableau);
 
             if(tableauPos[N] == 0) {
-                if(tableau[((i - 1) * WIDTH) + ib] >= 10 && tableau[((i - 1) * WIDTH) + ib] <= 30) {
+                if((tableau[((i - 1) * WIDTH) + ib] >= 10 && tableau[((i - 1) * WIDTH) + ib] <= 30) || tableau[((i - 1) * WIDTH) + ib] == 99) {
                     test++;
                 }
             }
 
             if(tableauPos[S] == 0) {
-                if(tableau[((i + 1) * WIDTH) + ib] >= 10 && tableau[((i + 1) * WIDTH) + ib] <= 30) {
+                if((tableau[((i + 1) * WIDTH) + ib] >= 10 && tableau[((i + 1) * WIDTH) + ib] <= 30) || tableau[((i + 1) * WIDTH) + ib] == 99) {
                     test++;
                 }
             }
 
             if(tableauPos[E] == 0) {
-                if(tableau[(i * WIDTH) + (ib + 1)] >= 10 && tableau[(i * WIDTH) + (ib + 1)] <= 30) {
+                if((tableau[(i * WIDTH) + (ib + 1)] >= 10 && tableau[(i * WIDTH) + (ib + 1)] <= 30) || tableau[((i + 1) * WIDTH) + ib] == 99) {
                     test++;
                 }
             }
 
             if(tableauPos[O] == 0) {
-                if(tableau[(i * WIDTH) + (ib - 1)] >= 10 && tableau[(i * WIDTH) + (ib - 1)] <= 30) {
+                if((tableau[(i * WIDTH) + (ib - 1)] >= 10 && tableau[(i * WIDTH) + (ib - 1)] <= 30) || tableau[(i * WIDTH) + (ib - 1)] == 99) {
                     test++;
                 }
             }
