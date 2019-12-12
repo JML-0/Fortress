@@ -141,7 +141,7 @@ void jouer(int* tableau) {
                 tableau[(y * WIDTH) + x] += 100 - valeur;
                 ok = 0;
             }
-            if(valeur >= 100) {
+            if(valeur >= 100 && valeur < 300) {
                 tableau[(y * WIDTH) + x] += 100;
                 ok = 0;
             }
@@ -202,6 +202,6 @@ void ia(int* tableau) {
         }
     }
 
-    //printf("X: %d, Y: %d", poisitionParfaite.x, poisitionParfaite.y);
+    printf("IA X: %d, Y: %d\n", poisitionParfaite.x, poisitionParfaite.y);
     tableau[(poisitionParfaite.y * WIDTH) + poisitionParfaite.x] -= 100;
 }
