@@ -27,12 +27,13 @@ int * creerTableau()
     int size = (WIDTH * LENGTH) - 1;
     int * tab = malloc(sizeof(int) * size);
 
-    tab[27] = -10;
+    //tab[27] = -100;
 
     return tab;
 }
 
 void afficherTableau(int* tableau) {
+    Point P;
     printf("[Y/X]");
     for(int ia = 0; ia < LENGTH; ia++)
             printf("( %d )", ia);
@@ -43,56 +44,45 @@ void afficherTableau(int* tableau) {
 
         printf("(%d)  |", i);
         for(int ib = 0; ib < LENGTH; ib++) {
-            switch(tableau[(i * WIDTH) + ib]) {
+            P.x = ib; P.y = i;
+            switch(tableau[getIndex(P)]) {
                 case 99:
                     printf(" 0  |");
                     break;
-                case 1:
-                    printf("+1  |");
+                case 1 ... 9:
+                    printf("+%d  |", tableau[getIndex(P)]);
                     break;
-                case 2:
-                    printf("+2  |");
-                    break;
-                case 3:
-                    printf("+3  |");
-                    break;
-                case 4:
-                    printf("+4  |");
+                case 10 ... 12:
+                    printf("+%d |", tableau[getIndex(P)]);
                     break;
 
-                case -1:
-                    printf("-1  |");
+                case -9 ... -1:
+                    printf("%d  |", tableau[getIndex(P)]);
                     break;
-                case -2:
-                    printf("-2  |");
-                    break;
-                case -3:
-                    printf("-3  |");
-                    break;
-                case -4:
-                    printf("-4  |");
+                case -12 ... -10:
+                    printf("%d |", tableau[getIndex(P)]);
                     break;
 
-                case -10:
+                case -100:
                     printf("T2  |");
                     break;
-                case -20:
+                case -200:
                     printf("TT2 |");
                     break;
 
-                case -30:
+                case -300:
                     printf("TTT2|");
                     break;
 
-                case 10:
+                case 100:
                     printf("T1  |");
                     break;
 
-                case 20:
+                case 200:
                     printf("TT1 |");
                     break;
 
-                case 30:
+                case 300:
                     printf("TTT1|");
                     break;
 
@@ -118,7 +108,7 @@ void afficherTableau(int* tableau) {
 int playerStillHaveTowers(int* tableau) {
     for(int i = 0; i < WIDTH; i++)
         for(int ib = 0; ib < LENGTH; ib++) {
-            if(tableau[(i * WIDTH) + ib] >= 0 && tableau[(i * WIDTH) + ib] <= 30) {
+            if(tableau[(i * WIDTH) + ib] >= 0 && tableau[(i * WIDTH) + ib] <= 300) {
                 return 1;
             }
         }
@@ -147,8 +137,8 @@ void jouer(int* tableau) {
             } while(y >= WIDTH);
             
             int valeur = tableau[(y * WIDTH) + x];
-            if(valeur >= 0 && valeur < 30) {
-                tableau[(y * WIDTH) + x] += 10;
+            if(valeur >= 0 && valeur < 300) {
+                tableau[(y * WIDTH) + x] += 100;
                 ok = 0;
             }
 
@@ -168,8 +158,9 @@ void jouer(int* tableau) {
 
 void ia(int* tableau) {
     //Positionner la tour dans une case proche aux maximums des cases positives
-    Point poisitionParfaite, testPosition;
+    Point poisitionParfaite, testPosition, P;
     int meilleurPositionNmbCotes = 0, test = 0;
+    int* tableauPos = NULL;
     //int* tableauNew = show(tableau);
 
     for(int i = 0; i < WIDTH; i++) {
@@ -177,31 +168,24 @@ void ia(int* tableau) {
             test = 0;
             testPosition.x = ib;
             testPosition.y = i;
-            int* tableauPos = nextTowers(testPosition, tableau);
+            P.x = ib; P.y = i;
+            tableauPos = nextTowers(testPosition, tableau);
 
-            if(tableauPos[N] == 0) {
-                if((tableau[((i - 1) * WIDTH) + ib] >= 10 && tableau[((i - 1) * WIDTH) + ib] <= 30) || tableau[((i - 1) * WIDTH) + ib] == 99) {
+            if(tableauPos[N] == 0)
+                if((tableau[getIndexDirection(P, N)] >= 100 && tableau[getIndexDirection(P, N)] <= 300) || tableau[getIndexDirection(P, N)] == 99)
                     test++;
-                }
-            }
 
-            if(tableauPos[S] == 0) {
-                if((tableau[((i + 1) * WIDTH) + ib] >= 10 && tableau[((i + 1) * WIDTH) + ib] <= 30) || tableau[((i + 1) * WIDTH) + ib] == 99) {
+            if(tableauPos[S] == 0)
+                if((tableau[getIndexDirection(P, S)] >= 100 && tableau[getIndexDirection(P, S)] <= 300) || tableau[getIndexDirection(P, S)] == 99)
                     test++;
-                }
-            }
 
-            if(tableauPos[E] == 0) {
-                if((tableau[(i * WIDTH) + (ib + 1)] >= 10 && tableau[(i * WIDTH) + (ib + 1)] <= 30) || tableau[((i + 1) * WIDTH) + ib] == 99) {
+            if(tableauPos[E] == 0)
+                if((tableau[getIndexDirection(P, E)] >= 100 && tableau[getIndexDirection(P, E)] <= 300) || tableau[getIndexDirection(P, E)] == 99)
                     test++;
-                }
-            }
 
-            if(tableauPos[O] == 0) {
-                if((tableau[(i * WIDTH) + (ib - 1)] >= 10 && tableau[(i * WIDTH) + (ib - 1)] <= 30) || tableau[(i * WIDTH) + (ib - 1)] == 99) {
+            if(tableauPos[O] == 0)
+                if((tableau[getIndexDirection(P, O)] >= 100 && tableau[getIndexDirection(P, O)] <= 300) || tableau[getIndexDirection(P, O)] == 99)
                     test++;
-                }
-            }
 
             if(caseIsAvailable(testPosition, tableau) && test > meilleurPositionNmbCotes) {
                 poisitionParfaite = testPosition;
@@ -211,5 +195,5 @@ void ia(int* tableau) {
     }
 
     //printf("X: %d, Y: %d", poisitionParfaite.x, poisitionParfaite.y);
-    tableau[(poisitionParfaite.y * WIDTH) + poisitionParfaite.x] -= 10;
+    tableau[(poisitionParfaite.y * WIDTH) + poisitionParfaite.x] -= 100;
 }

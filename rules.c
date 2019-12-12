@@ -91,7 +91,7 @@ void setValue(Point P, Direction D, int * T, int * R, int S)
         if (R[getIndexDirection(P, D)] == 99) //différence entre case vide et 0
             R[getIndexDirection(P, D)] = 0;
 
-        R[getIndexDirection(P, D)] += -T[getIndex(P)] / 100; 
+        R[getIndexDirection(P, D)] += T[getIndex(P)] / 100; 
 
         if (R[getIndexDirection(P, D)] == 0)
             R[getIndexDirection(P, D)] = 99;
