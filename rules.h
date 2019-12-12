@@ -19,5 +19,7 @@ extern int caseIsAvailable(Point P, int * T);
 extern int * nextTowers(Point P, int * T);
 extern int * show(int * T);
 extern void deleteTowers(int * T);
+extern int getIndex(Point P);
+extern int getIndexDirection(Point P, Direction D);
 
 #endif

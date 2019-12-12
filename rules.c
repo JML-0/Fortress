@@ -11,9 +11,9 @@ int caseIsAvailable(Point P, int * T)
     int index = (P.y * LENGTH) + P.x;
     switch (T[index])
     {
-        case -30 ... -10:
+        case -300 ... -100:
             return 0;
-        case 10 ... 30:
+        case 100 ... 300:
             return 0;
     }      
 
@@ -84,13 +84,37 @@ int getIndexDirection(Point P, Direction D)
     }
 }
 
+void setValue(Point P, Direction D, int * T, int * R, int S)
+{
+    if (S)
+    {
+        if (R[getIndexDirection(P, D)] == 99) //différence entre case vide et 0
+            R[getIndexDirection(P, D)] = 0;
+
+        R[getIndexDirection(P, D)] += -T[getIndex(P)] / 100; 
+
+        if (R[getIndexDirection(P, D)] == 0)
+            R[getIndexDirection(P, D)] = 99;
+    }
+    else
+    {
+        if (R[getIndexDirection(P, D)] == 99) 
+            R[getIndexDirection(P, D)] = 0;
+
+        R[getIndexDirection(P, D)] -= -T[getIndex(P)] / 100;
+
+        if (R[getIndexDirection(P, D)] == 0)
+            R[getIndexDirection(P, D)] = 99;
+    }
+}
+
 int * show(int * T)
 {
+    Point p;
     int * R, * _nextTowers;
+
     R           = malloc(sizeof(int) * (LENGTH * WIDTH));       assert(R);
     _nextTowers = malloc(sizeof(int) * 4);                      assert(_nextTowers);
-
-    Point p;
 
     deleteTowers(T); //tour a supprimer
 
@@ -106,82 +130,26 @@ int * show(int * T)
                 
                 switch (T[getIndex(p)])
                 {
-                    case 10 ... 30: //tour +
-                        if (_nextTowers[E] == 1) //pas de tour a l'Est
-                        {
-                            if (R[getIndexDirection(p, E)] == 99)
-                                R[getIndexDirection(p, E)] = 0;
-                            R[getIndexDirection(p, E)] += 1;
-                            if (R[getIndexDirection(p, E)] == 0)
-                                R[getIndexDirection(p, E)] = 99;
-                        }
+                    case -300 ... -100: //tour -
+                        if (_nextTowers[E] == 1) setValue(p, E, T, R, 0); // pas de tour à l'Est
                         
-                        if (_nextTowers[S] == 1) //pas de tour au Sud
-                        {
-                            if (R[getIndexDirection(p, S)] == 99)
-                                R[getIndexDirection(p, S)] = 0;
-                            R[getIndexDirection(p, S)] += 1;
-                            if (R[getIndexDirection(p, S)] == 0)
-                                R[getIndexDirection(p, S)] = 99;
-                        }
+                        if (_nextTowers[S] == 1) setValue(p, S, T, R, 0);
 
-                        if (_nextTowers[O] == 1) //pas de tour a l'Ouest
-                        {
-                            if (R[getIndexDirection(p, O)] == 99)
-                                R[getIndexDirection(p, O)] = 0;
-                            R[getIndexDirection(p, O)] += 1;
-                            if (R[getIndexDirection(p, O)] == 0)
-                                R[getIndexDirection(p, O)] = 99;
-                        }
+                        if (_nextTowers[O] == 1) setValue(p, O, T, R, 0);
                         
-                        if (_nextTowers[N] == 1) //pas de tour au Nord
-                        {
-                            if (R[getIndexDirection(p, N)] == 99)
-                                R[getIndexDirection(p, N)] = 0;
-                            R[getIndexDirection(p, N)] += 1;
-                            if (R[getIndexDirection(p, N)] == 0)
-                                R[getIndexDirection(p, N)] = 99;
-                        }
+                        if (_nextTowers[N] == 1) setValue(p, N, T, R, 0);
 
                         R[getIndex(p)] = T[getIndex(p)]; //Tour
 
                         break;
-                    case -30 ... -10: //tour -
-                        if (_nextTowers[E] == 1)
-                        {
-                            if (R[getIndexDirection(p, E)] == 99)
-                                R[getIndexDirection(p, E)] = 0;
-                            R[getIndexDirection(p, E)] -= 1;
-                            if (R[getIndexDirection(p, E)] == 0)
-                                R[getIndexDirection(p, E)] = 99;
-                        }
+                    case 100 ... 300: //tour +
+                        if (_nextTowers[E] == 1) setValue(p, E, T, R, 1);
                         
-                        if (_nextTowers[S] == 1)
-                        {
-                            if (R[getIndexDirection(p, S)] == 99)
-                                R[getIndexDirection(p, S)] = 0;
-                            R[getIndexDirection(p, S)] -= 1;
-                            if (R[getIndexDirection(p, S)] == 0)
-                                R[getIndexDirection(p, S)] = 99;
-                        }
+                        if (_nextTowers[S] == 1) setValue(p, S, T, R, 1);
 
-                        if (_nextTowers[O] == 1)
-                        {
-                            if (R[getIndexDirection(p, O)] == 99)
-                                R[getIndexDirection(p, O)] = 0;
-                            R[getIndexDirection(p, O)] -= 1;
-                            if (R[getIndexDirection(p, O)] == 0)
-                                R[getIndexDirection(p, O)] = 99;
-                        }
+                        if (_nextTowers[O] == 1) setValue(p, O, T, R, 1);
                         
-                        if (_nextTowers[N] == 1)
-                        {
-                            if (R[getIndexDirection(p, N)] == 99)
-                                R[getIndexDirection(p, N)] = 0;
-                            R[getIndexDirection(p, N)] -= 1;
-                            if (R[getIndexDirection(p, N)] == 0)
-                                R[getIndexDirection(p, N)] = 99;
-                        }
+                        if (_nextTowers[N] == 1) setValue(p, N, T, R, 1);
 
                         R[getIndex(p)] = T[getIndex(p)];
 
@@ -225,10 +193,10 @@ void deleteTowers(int * T)
             Total = TN + TE + TS + TO; //Somme des valeurs des tours adjacentes
 
             if ((Tower > 0) && (Tower + Total < 0)) //Tour +
-                T[getIndex(P)] = Total / 10;
+                T[getIndex(P)] = Total / 100;
 
             if ((Tower < 0) && (Tower + Total > 0)) // Tour -
-                T[getIndex(P)] = Total / 10;
+                T[getIndex(P)] = Total / 100;
         }        
     }
     free(_nextTowers);
