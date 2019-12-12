@@ -174,7 +174,7 @@ void jouer(int* tableau) {
             }
         }
         
-        //ia(tableau);
+        ia(tableau);
     }
 }
 
@@ -182,37 +182,42 @@ void ia(int* tableau) {
     //Positionner la tour dans une case proche aux maximums des cases positives
     Point poisitionParfaite, testPosition;
     int meilleurPositionNmbCotes = 0, test = 0;
-    int* tableauNew = show(tableau);
+    //int* tableauNew = show(tableau);
 
     for(int i = 0; i < WIDTH; i++) {
         for(int ib = 0; ib < LENGTH; ib++) {
             test = 0;
             testPosition.x = ib;
             testPosition.y = i;
+            int* tableauPos = nextTowers(testPosition, tableau);
 
-            if((ib - 1) >= 0) {
-                printf("%d - ", tableauNew[(i * WIDTH) + (ib - 1)]);
-                if(tableauNew[(i * WIDTH) + (ib - 1)] > 0 && tableauNew[(i * WIDTH) + (ib - 1)] <= 4)
+            if(tableauPos[N] == 0) {
+                if(tableau[((i - 1) * WIDTH) + ib] >= 10 && tableau[((i - 1) * WIDTH) + ib] <= 30) {
                     test++;
-            }
-                
-            if((ib + 1) < WIDTH) {
-                if(tableauNew[(i * WIDTH) + (ib + 1)] > 0 && tableauNew[(i * WIDTH) + (ib + 1)] <= 4)
-                    test++;
+                }
             }
 
-            if((i + 1) >= 0) {
-                if(tableauNew[((i + 1) * WIDTH) + ib] > 0 && tableauNew[((i + 1) * WIDTH) + ib] <= 4)
+            if(tableauPos[S] == 0) {
+                if(tableau[((i + 1) * WIDTH) + ib] >= 10 && tableau[((i + 1) * WIDTH) + ib] <= 30) {
                     test++;
+                }
             }
 
-            if((i - 1) < LENGTH) {
-                if(tableauNew[((i - 1) * WIDTH) + ib] > 0 && tableauNew[((i - 1) * WIDTH) + ib] <= 4)
+            if(tableauPos[E] == 0) {
+                if(tableau[(i * WIDTH) + (ib + 1)] >= 10 && tableau[(i * WIDTH) + (ib + 1)] <= 30) {
                     test++;
+                }
+            }
+
+            if(tableauPos[O] == 0) {
+                if(tableau[(i * WIDTH) + (ib - 1)] >= 10 && tableau[(i * WIDTH) + (ib - 1)] <= 30) {
+                    test++;
+                }
             }
 
             if(caseIsAvailable(testPosition, tableau) && test > meilleurPositionNmbCotes) {
                 poisitionParfaite = testPosition;
+                meilleurPositionNmbCotes = test;
             }
         }
     }
