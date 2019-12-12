@@ -137,8 +137,16 @@ void jouer(int* tableau) {
             } while(y >= WIDTH);
             
             int valeur = tableau[(y * WIDTH) + x];
-            if(valeur >= 0 && valeur < 300) {
+            if((valeur >= 0) && (valeur < 100)) {
+                tableau[(y * WIDTH) + x] += 100 - valeur;
+                ok = 0;
+            }
+            if(valeur >= 100) {
                 tableau[(y * WIDTH) + x] += 100;
+                ok = 0;
+            }
+            if(valeur == -1){
+                tableau[(y * WIDTH) + x] += 101;
                 ok = 0;
             }
 
