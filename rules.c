@@ -11,11 +11,12 @@ int caseIsAvailable(Point P, int * T)
     int index = (P.y * LENGTH) + P.x;
     switch (T[index])
     {
-        case -30 ... -10: 
+        case -30 ... -10:
             return 0;
         case 10 ... 30:
             return 0;
     }      
+
     return 1;
 }
 
@@ -96,6 +97,8 @@ int * show(int * T)
 {
     int * R;
     R = malloc(sizeof(int) * (LENGTH * WIDTH)); assert(R);
+
+    deleteTowers(T);
 
     for (int i = 0; i < WIDTH; i++)
     {
@@ -228,9 +231,46 @@ int * show(int * T)
                     default:
                         break;
                 }
+                free(_NextTowers);
             }
         }
     }
 
     return R;
+}
+
+/*
+ * Supprime les tours lorsqu'elle ne dominent pas l'adversaire
+ */
+void deleteTowers(int * T)
+{
+    for (int i = 0; i < WIDTH; i++)
+    {
+        for (int j = 0; j < LENGTH; j++)
+        {
+            Point P;
+            P.x = j; P.y = i;
+
+            int Tower = T[(P.y * LENGTH) + P.x]; //Tour actuelle;
+            int TN, TE, TS, TO;
+            TN = TE = TS = TO = 0;          //Tour Nord Est Sud Ouest
+            int * _nextTowers = malloc(sizeof(int) * 4); assert(_nextTowers);
+            _nextTowers = nextTowers(P, T);
+
+            if (_nextTowers[N] == 0) TN = T[((P.y - 1) * WIDTH) + P.x];  //
+            if (_nextTowers[E] == 0) TE = T[(P.y * WIDTH) + (P.x + 1)];  //  Valeur des tours si présentes
+            if (_nextTowers[S] == 0) TS = T[((P.y + 1) * WIDTH) + P.x];  //
+            if (_nextTowers[O] == 0) TO = T[(P.y * WIDTH) + (P.x - 1)];  //
+
+            int Total = TN + TE + TS + TO; //Somme des valeurs des tours adjacentes
+
+            if ((Tower > 0) && (Tower + Total < 0)) //Tour +
+                T[((P.y * WIDTH) + P.x)] = Total / 10;
+
+            if ((Tower < 0) && (Tower + Total > 0)) // Tour -
+                T[((P.y * WIDTH) + P.x)] = Total / 10;
+
+            free(_nextTowers);
+        }        
+    }
 }

@@ -16,7 +16,7 @@ void ia(int* tableau);
 int main(void) {
     int * tableau = creerTableau();
 
-    afficherTableau(show(tableau));
+    //afficherTableau(show(tableau));
 
     Point p;
     p.x = 0;
@@ -57,6 +57,8 @@ int * creerTableau()
     tab[14] = -10;
     tab[21] = -10;
     tab[28] = 10;*/
+
+    tab[27] = -10;
 
     return tab;
 }
@@ -172,7 +174,7 @@ void jouer(int* tableau) {
             }
         }
         
-        ia(tableau);
+        //ia(tableau);
     }
 }
 
