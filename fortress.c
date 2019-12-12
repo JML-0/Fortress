@@ -12,6 +12,7 @@ int * creerTableau();
 void afficherTableau(int* tableau);
 void jouer(int* tableau);
 void ia(int* tableau);
+int playerStillHaveTowers(int* tableau);
 
 int main(void) {
     int * tableau = creerTableau();
@@ -114,6 +115,17 @@ void afficherTableau(int* tableau) {
 
 }
 
+int playerStillHaveTowers(int* tableau) {
+    for(int i = 0; i < WIDTH; i++)
+        for(int ib = 0; ib < LENGTH; ib++) {
+            if(tableau[(i * WIDTH) + ib] >= 0 && tableau[(i * WIDTH) + ib] <= 30) {
+                return 1;
+            }
+        }
+
+    return 0;
+}
+
 void jouer(int* tableau) {
     int joue = 1;
 
@@ -145,7 +157,12 @@ void jouer(int* tableau) {
             }
         }
         
-        //ia(tableau);
+        ia(tableau);
+
+        if(!playerStillHaveTowers(tableau)) {
+            printf("\n Perdu !");
+            exit(0);
+        }
     }
 }
 
@@ -163,25 +180,25 @@ void ia(int* tableau) {
             int* tableauPos = nextTowers(testPosition, tableau);
 
             if(tableauPos[N] == 0) {
-                if(tableau[((i - 1) * WIDTH) + ib] >= 10 && tableau[((i - 1) * WIDTH) + ib] <= 30) {
+                if((tableau[((i - 1) * WIDTH) + ib] >= 10 && tableau[((i - 1) * WIDTH) + ib] <= 30) || tableau[((i - 1) * WIDTH) + ib] == 99) {
                     test++;
                 }
             }
 
             if(tableauPos[S] == 0) {
-                if(tableau[((i + 1) * WIDTH) + ib] >= 10 && tableau[((i + 1) * WIDTH) + ib] <= 30) {
+                if((tableau[((i + 1) * WIDTH) + ib] >= 10 && tableau[((i + 1) * WIDTH) + ib] <= 30) || tableau[((i + 1) * WIDTH) + ib] == 99) {
                     test++;
                 }
             }
 
             if(tableauPos[E] == 0) {
-                if(tableau[(i * WIDTH) + (ib + 1)] >= 10 && tableau[(i * WIDTH) + (ib + 1)] <= 30) {
+                if((tableau[(i * WIDTH) + (ib + 1)] >= 10 && tableau[(i * WIDTH) + (ib + 1)] <= 30) || tableau[((i + 1) * WIDTH) + ib] == 99) {
                     test++;
                 }
             }
 
             if(tableauPos[O] == 0) {
-                if(tableau[(i * WIDTH) + (ib - 1)] >= 10 && tableau[(i * WIDTH) + (ib - 1)] <= 30) {
+                if((tableau[(i * WIDTH) + (ib - 1)] >= 10 && tableau[(i * WIDTH) + (ib - 1)] <= 30) || tableau[(i * WIDTH) + (ib - 1)] == 99) {
                     test++;
                 }
             }
@@ -193,6 +210,6 @@ void ia(int* tableau) {
         }
     }
 
-    printf("X: %d, Y: %d", poisitionParfaite.x, poisitionParfaite.y);
+    //printf("X: %d, Y: %d", poisitionParfaite.x, poisitionParfaite.y);
     tableau[(poisitionParfaite.y * WIDTH) + poisitionParfaite.x] -= 10;
 }
