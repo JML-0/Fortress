@@ -39,33 +39,21 @@ int * nextTowers(Point P, int * T)
     R = malloc(sizeof(int) * 4); assert(R);
 
     p.y -= 1;
-
-    printf("x:%d   y:%d\n", p.x, p.y);
-
     if (p.y < 0) R[N] = -1;
     else
     R[N] = caseIsAvailable(p, T);
 
     p.y += 1; p.x += 1;
-
-    printf("x:%d   y:%d\n", p.x, p.y);
-
     if (p.x > LENGTH - 1) R[E] = -1;
     else
     R[E] = caseIsAvailable(p, T);
     
     p.y += 1; p.x -= 1;
-
-    printf("x:%d   y:%d\n", p.x, p.y);
-
     if (p.y > WIDTH - 1) R[S] = -1;
     else
     R[S] = caseIsAvailable(p, T);
     
     p.y -= 1; p.x -= 1;
-
-    printf("x:%d   y:%d\n", p.x, p.y);
-
     if (p.x < 0) R[O] = -1;
     else
     R[O] = caseIsAvailable(p, T);
@@ -74,203 +62,174 @@ int * nextTowers(Point P, int * T)
 }
 
 /*
- * Retourne l'adresse d'une tour voisine en fonction d'une direction donnée
+ * Retoune l'index du point donné
  */
-int * getAddressTowerDirection(Point P, int * T, Direction D)
+int getIndex(Point P) { return (P.y * WIDTH) + P.x; } 
+
+/*
+ * Retourne l'index du point donné en fonction d'une direction
+ */
+int getIndexDirection(Point P, Direction D)
 {
     switch (D)
     {
     case N:
-        return &T[(P.y - 1 * LENGTH) + P.x];
+        return ((P.y - 1 ) * LENGTH) + P.x;
     case E:
-        return &T[(P.y * LENGTH) + P.x + 1];
+        return (P.y * LENGTH) + P.x + 1;
     case S:
-        return &T[(P.y + 1 * LENGTH) + P.x];
+        return ((P.y + 1) * LENGTH) + P.x;
     case O:
-        return &T[(P.y * LENGTH) + P.x - 1];
+        return (P.y * LENGTH) + P.x - 1;
     }
-
-    return NULL;
 }
 
 int * show(int * T)
 {
-    int * R;
-    R = malloc(sizeof(int) * (LENGTH * WIDTH)); assert(R);
+    int * R, * _nextTowers;
+    R           = malloc(sizeof(int) * (LENGTH * WIDTH));       assert(R);
+    _nextTowers = malloc(sizeof(int) * 4);                      assert(_nextTowers);
 
-    deleteTowers(T);
+    Point p;
+
+    deleteTowers(T); //tour a supprimer
 
     for (int i = 0; i < WIDTH; i++)
     {
         for (int j = 0; j < LENGTH; j++)
         {
-            Point p;
             p.x = j; p.y = i;
-            int isTower = caseIsAvailable(p , T);
 
-            if (!isTower) // une tour
+            if (!caseIsAvailable(p , T)) // une tour
             {
-                int * _NextTowers = malloc(sizeof(int) * 4);
-                _NextTowers = nextTowers(p, T);
+                _nextTowers = nextTowers(p, T);
                 
-                switch (T[(i * WIDTH) + j])
+                switch (T[getIndex(p)])
                 {
-                    case 10:
-                        if (_NextTowers[E] == 1) //pas de tour a l'Est
+                    case 10 ... 30: //tour +
+                        if (_nextTowers[E] == 1) //pas de tour a l'Est
                         {
-                            R[(i * WIDTH) + (j + 1)] += 1;
-                            printf("E -> %d\n", _NextTowers[E]);
+                            if (R[getIndexDirection(p, E)] == 99)
+                                R[getIndexDirection(p, E)] = 0;
+                            R[getIndexDirection(p, E)] += 1;
+                            if (R[getIndexDirection(p, E)] == 0)
+                                R[getIndexDirection(p, E)] = 99;
                         }
                         
-                        if (_NextTowers[S] == 1) //pas de tour au Sud
+                        if (_nextTowers[S] == 1) //pas de tour au Sud
                         {
-                            R[((i + 1) * WIDTH) + j] += 1;
-                            printf("S -> %d\n", _NextTowers[S]);
+                            if (R[getIndexDirection(p, S)] == 99)
+                                R[getIndexDirection(p, S)] = 0;
+                            R[getIndexDirection(p, S)] += 1;
+                            if (R[getIndexDirection(p, S)] == 0)
+                                R[getIndexDirection(p, S)] = 99;
                         }
 
-                        if (_NextTowers[O] == 1) //pas de tour a l'Ouest
+                        if (_nextTowers[O] == 1) //pas de tour a l'Ouest
                         {
-                            R[(i * WIDTH) + (j - 1)] += 1;
-                            printf("O -> %d\n", _NextTowers[O]);
+                            if (R[getIndexDirection(p, O)] == 99)
+                                R[getIndexDirection(p, O)] = 0;
+                            R[getIndexDirection(p, O)] += 1;
+                            if (R[getIndexDirection(p, O)] == 0)
+                                R[getIndexDirection(p, O)] = 99;
                         }
                         
-                        if (_NextTowers[N] == 1) //pas de tour au Nord
+                        if (_nextTowers[N] == 1) //pas de tour au Nord
                         {
-                            R[((i - 1) * WIDTH) + j] += 1;
-                            printf("N -> %d\n", _NextTowers[N]);
+                            if (R[getIndexDirection(p, N)] == 99)
+                                R[getIndexDirection(p, N)] = 0;
+                            R[getIndexDirection(p, N)] += 1;
+                            if (R[getIndexDirection(p, N)] == 0)
+                                R[getIndexDirection(p, N)] = 99;
                         }
 
-                        R[(i * WIDTH) + j] = 10; //Tour
+                        R[getIndex(p)] = T[getIndex(p)]; //Tour
 
                         break;
-                    case 20:
-                        if (_NextTowers[E] == 1) //pas de tour a l'Est
+                    case -30 ... -10: //tour -
+                        if (_nextTowers[E] == 1)
                         {
-                            R[(i * WIDTH) + (j + 1)] += 2;
-                            printf("E -> %d\n", _NextTowers[E]);
+                            if (R[getIndexDirection(p, E)] == 99)
+                                R[getIndexDirection(p, E)] = 0;
+                            R[getIndexDirection(p, E)] -= 1;
+                            if (R[getIndexDirection(p, E)] == 0)
+                                R[getIndexDirection(p, E)] = 99;
                         }
                         
-                        if (_NextTowers[S] == 1) //pas de tour au Sud
+                        if (_nextTowers[S] == 1)
                         {
-                            R[((i + 1) * WIDTH) + j] += 2;
-                            printf("S -> %d\n", _NextTowers[S]);
+                            if (R[getIndexDirection(p, S)] == 99)
+                                R[getIndexDirection(p, S)] = 0;
+                            R[getIndexDirection(p, S)] -= 1;
+                            if (R[getIndexDirection(p, S)] == 0)
+                                R[getIndexDirection(p, S)] = 99;
                         }
 
-                        if (_NextTowers[O] == 1) //pas de tour a l'Ouest
+                        if (_nextTowers[O] == 1)
                         {
-                            R[(i * WIDTH) + (j - 1)] += 2;
-                            printf("O -> %d\n", _NextTowers[O]);
+                            if (R[getIndexDirection(p, O)] == 99)
+                                R[getIndexDirection(p, O)] = 0;
+                            R[getIndexDirection(p, O)] -= 1;
+                            if (R[getIndexDirection(p, O)] == 0)
+                                R[getIndexDirection(p, O)] = 99;
                         }
                         
-                        if (_NextTowers[N] == 1) //pas de tour au Nord
+                        if (_nextTowers[N] == 1)
                         {
-                            R[((i - 1) * WIDTH) + j] += 2;
-                            printf("N -> %d\n", _NextTowers[N]);
+                            if (R[getIndexDirection(p, N)] == 99)
+                                R[getIndexDirection(p, N)] = 0;
+                            R[getIndexDirection(p, N)] -= 1;
+                            if (R[getIndexDirection(p, N)] == 0)
+                                R[getIndexDirection(p, N)] = 99;
                         }
 
-                        R[(i * WIDTH) + j] = 20; //Tour
-
-                        break;
-                    case 30:
-                        if (_NextTowers[E] == 1) //pas de tour a l'Est
-                        {
-                            R[(i * WIDTH) + (j + 1)] += 3;
-                            printf("E -> %d\n", _NextTowers[E]);
-                        }
-                        
-                        if (_NextTowers[S] == 1) //pas de tour au Sud
-                        {
-                            R[((i + 1) * WIDTH) + j] += 3;
-                            printf("S -> %d\n", _NextTowers[S]);
-                        }
-
-                        if (_NextTowers[O] == 1) //pas de tour a l'Ouest
-                        {
-                            R[(i * WIDTH) + (j - 1)] += 3;
-                            printf("O -> %d\n", _NextTowers[O]);
-                        }
-                        
-                        if (_NextTowers[N] == 1) //pas de tour au Nord
-                        {
-                            R[((i - 1) * WIDTH) + j] += 3;
-                            printf("N -> %d\n", _NextTowers[N]);
-                        }
-
-                        R[(i * WIDTH) + j] = 30; //Tour
-
-                        break;
-                
-                    case -10:
-                        if (_NextTowers[E] == 1) //pas de tour a l'Est
-                        {
-                            R[(i * WIDTH) + (j + 1)] -= 1;
-                            printf("E -> %d\n", _NextTowers[E]);
-                        }
-                        
-                        if (_NextTowers[S] == 1) //pas de tour au Sud
-                        {
-                            R[((i + 1) * WIDTH) + j] -= 1;
-                            printf("S -> %d\n", _NextTowers[S]);
-                        }
-
-                        if (_NextTowers[O] == 1) //pas de tour a l'Ouest
-                        {
-                            R[(i * WIDTH) + (j - 1)] -= 1;
-                            printf("O -> %d\n", _NextTowers[O]);
-                        }
-                        
-                        if (_NextTowers[N] == 1) //pas de tour au Nord
-                        {
-                            R[((i - 1) * WIDTH) + j] -= 1;
-                            printf("N -> %d\n", _NextTowers[N]);
-                        }
-
-                        R[(i * WIDTH) + j] = -10; //Tour
+                        R[getIndex(p)] = T[getIndex(p)];
 
                         break;
                     default:
                         break;
                 }
-                free(_NextTowers);
             }
         }
     }
+    free(_nextTowers);
 
     return R;
 }
 
 /*
- * Supprime les tours lorsqu'elle ne dominent pas l'adversaire
+ * Supprime les tours lorsqu'elles ne dominent pas l'adversaire
  */
 void deleteTowers(int * T)
 {
+    Point P;
+    int Tower, TN, TE, TS, TO, Total;
+    int * _nextTowers;
+
+    _nextTowers = malloc(sizeof(int) * 4);  assert(_nextTowers);
+
     for (int i = 0; i < WIDTH; i++)
     {
         for (int j = 0; j < LENGTH; j++)
         {
-            Point P;
             P.x = j; P.y = i;
-
-            int Tower = T[(P.y * LENGTH) + P.x]; //Tour actuelle;
-            int TN, TE, TS, TO;
+            Tower = T[getIndex(P)]; //Tour actuelle;
             TN = TE = TS = TO = 0;          //Tour Nord Est Sud Ouest
-            int * _nextTowers = malloc(sizeof(int) * 4); assert(_nextTowers);
             _nextTowers = nextTowers(P, T);
 
-            if (_nextTowers[N] == 0) TN = T[((P.y - 1) * WIDTH) + P.x];  //
-            if (_nextTowers[E] == 0) TE = T[(P.y * WIDTH) + (P.x + 1)];  //  Valeur des tours si présentes
-            if (_nextTowers[S] == 0) TS = T[((P.y + 1) * WIDTH) + P.x];  //
-            if (_nextTowers[O] == 0) TO = T[(P.y * WIDTH) + (P.x - 1)];  //
+            if (_nextTowers[N] == 0) TN = T[getIndexDirection(P, N)];  //
+            if (_nextTowers[E] == 0) TE = T[getIndexDirection(P, E)];  //  Valeur des tours si présentes
+            if (_nextTowers[S] == 0) TS = T[getIndexDirection(P, S)];  //
+            if (_nextTowers[O] == 0) TO = T[getIndexDirection(P, O)];  //
 
-            int Total = TN + TE + TS + TO; //Somme des valeurs des tours adjacentes
+            Total = TN + TE + TS + TO; //Somme des valeurs des tours adjacentes
 
             if ((Tower > 0) && (Tower + Total < 0)) //Tour +
-                T[((P.y * WIDTH) + P.x)] = Total / 10;
+                T[getIndex(P)] = Total / 10;
 
             if ((Tower < 0) && (Tower + Total > 0)) // Tour -
-                T[((P.y * WIDTH) + P.x)] = Total / 10;
-
-            free(_nextTowers);
+                T[getIndex(P)] = Total / 10;
         }        
     }
+    free(_nextTowers);
 }

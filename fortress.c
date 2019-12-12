@@ -16,47 +16,15 @@ void ia(int* tableau);
 int main(void) {
     int * tableau = creerTableau();
 
-    //afficherTableau(show(tableau));
-
-    Point p;
-    p.x = 0;
-    p.y = 7;
-    printf("Case disponible au point (%d,%d) ? ---> %d\n", p.x, p.y, caseIsAvailable(p, tableau));
-
-
-    int * test;
-    test = nextTowers(p, tableau);
-    printf("Tour au Nord -> %d\n", test[N]);
-    printf("Tour a l'Est -> %d\n", test[E]);
-    printf("Tour au Sud -> %d\n", test[S]);
-    printf("Tour a l'Ouest -> %d\n", test[O]);
-
-    printf("%d\n", tableau[55]);
-    printf("%p\n", getAddressTowerDirection(p, tableau, S));
-
     jouer(tableau);
 
-    free(test); free(tableau);
+    free(tableau);
 }
 
 int * creerTableau()
 {
     int size = (WIDTH * LENGTH) - 1;
     int * tab = malloc(sizeof(int) * size);
-    
-
-    /*tab[42] = 10; //TTT2
-    tab[49] = 10; //T1
-    tab[51] = 10; //T1
-    tab[56] = 10; //TT1
-    tab[58] = 10; //TTT2
-
-    tab[60] = 20;
-    tab[0] = 20;
-
-    tab[14] = -10;
-    tab[21] = -10;
-    tab[28] = 10;*/
 
     tab[27] = -10;
 
@@ -75,6 +43,9 @@ void afficherTableau(int* tableau) {
         printf("(%d)  |", i);
         for(int ib = 0; ib < LENGTH; ib++) {
             switch(tableau[(i * WIDTH) + ib]) {
+                case 99:
+                    printf(" 0  |");
+                    break;
                 case 1:
                     printf("+1  |");
                     break;
@@ -174,7 +145,7 @@ void jouer(int* tableau) {
             }
         }
         
-        ia(tableau);
+        //ia(tableau);
     }
 }
 
