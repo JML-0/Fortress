@@ -13,7 +13,7 @@ int * creerTableau();
 void afficherTableau(int* tableau);
 void jouer(int* tableau);
 void ia(int* tableau);
-int playerStillHaveTowers(int* tableau);
+int someoneWin(int* tableau);
 
 int main(void) {
     int * tableau = creerTableau();
@@ -102,6 +102,36 @@ void afficherTableau(int* tableau) {
     }
 }
 
+int someoneWin(int* tableau) {
+    int stillPlayer = 0, stillIA = 0;
+    Point P;
+
+    for(int i = 0; i < WIDTH; i++) {
+        for(int ib = 0; ib < LENGTH; ib++) {
+            P.x = ib; P.y = i;
+            
+            switch(tableau[getIndex(P)]) {
+                case 100 ... 300:
+                    stillPlayer = 1;
+                    break;
+
+                case -300 ... -100:
+                    stillIA = 1;
+                    break;
+            }
+        }
+    }
+
+    if(stillPlayer && stillIA)
+        return 0;
+
+    if(!stillIA)
+        return 1;
+
+    if(!stillPlayer)
+        return 2;
+}
+
 void jouer(int* tableau) {
     Point P;
     int joue = 1;
@@ -136,10 +166,20 @@ void jouer(int* tableau) {
         
         ia(tableau);
 
-        if(!playerStillHaveTowers(tableau)) {
-            printf("\n Perdu !");
-            exit(0);
+        switch(someoneWin(show(tableau))) {
+            case 1:
+                printf("\nVous avez gagner, bravo !\n");
+                afficherTableau(show(tableau));
+                exit(0);
+                break;
+
+            case 2:
+                printf("\nVous avez perdu :(\n");
+                afficherTableau(show(tableau));
+                exit(0);
+                break;
         }
+
     }
 }
 
@@ -150,33 +190,79 @@ void ia(int* tableau) {
     int* tableauPos = NULL;
     //int* tableauNew = show(tableau);
 
-    for(int i = 0; i < WIDTH; i++) {
-        for(int ib = 0; ib < LENGTH; ib++) {
-            test = 0;
-            testPosition.x = ib;
-            testPosition.y = i;
-            P.x = ib; P.y = i;
-            tableauPos = nextTowers(testPosition, tableau);
+    //Pour les angles
+    Point angle;
+    int playerAngle = 0;
 
-            if(tableauPos[N] == 0)
-                if((tableau[getIndexDirection(P, N)] >= 100 && tableau[getIndexDirection(P, N)] <= 300) || tableau[getIndexDirection(P, N)] == 99)
-                    test++;
+    angle.x = 0; angle.y = 0;
+    if(tableau[getIndex(angle)] >= 100 && tableau[getIndex(angle)] <= 300 ) {
+        angle.x = 1; angle.y = 1;
 
-            if(tableauPos[S] == 0)
-                if((tableau[getIndexDirection(P, S)] >= 100 && tableau[getIndexDirection(P, S)] <= 300) || tableau[getIndexDirection(P, S)] == 99)
-                    test++;
+        if(caseIsAvailable(angle, tableau)) {
+            poisitionParfaite = angle;
+            playerAngle = 1;
+        }
+    }
 
-            if(tableauPos[E] == 0)
-                if((tableau[getIndexDirection(P, E)] >= 100 && tableau[getIndexDirection(P, E)] <= 300) || tableau[getIndexDirection(P, E)] == 99)
-                    test++;
+    angle.x = 7; angle.y = 0;
+    if(tableau[getIndex(angle)] >= 100 && tableau[getIndex(angle)] <= 300 ) {
+        angle.x = 6; angle.y = 1;
 
-            if(tableauPos[O] == 0)
-                if((tableau[getIndexDirection(P, O)] >= 100 && tableau[getIndexDirection(P, O)] <= 300) || tableau[getIndexDirection(P, O)] == 99)
-                    test++;
+        if(caseIsAvailable(angle, tableau)) {
+            poisitionParfaite = angle;
+            playerAngle = 1;
+        }
+    }
 
-            if(caseIsAvailable(testPosition, tableau) && test > meilleurPositionNmbCotes) {
-                poisitionParfaite = testPosition;
-                meilleurPositionNmbCotes = test;
+    angle.x = 0; angle.y = 7;
+    if(tableau[getIndex(angle)] >= 100 && tableau[getIndex(angle)] <= 300 ) {
+        angle.x = 1; angle.y = 6;
+
+        if(caseIsAvailable(angle, tableau)) {
+            poisitionParfaite = angle;
+            playerAngle = 1;
+        }
+    }
+
+    angle.x = 7; angle.y = 7;
+    if(tableau[getIndex(angle)] >= 100 && tableau[getIndex(angle)] <= 300 ) {
+        angle.x = 6; angle.y = 6;
+
+        if(caseIsAvailable(angle, tableau)) {
+            poisitionParfaite = angle;
+            playerAngle = 1;
+        }
+    }
+
+    if(!playerAngle) {
+        for(int i = 0; i < WIDTH; i++) {
+            for(int ib = 0; ib < LENGTH; ib++) {
+                test = 0;
+                testPosition.x = ib;
+                testPosition.y = i;
+                P.x = ib; P.y = i;
+                tableauPos = nextTowers(testPosition, tableau);
+
+                if(tableauPos[N] == 0)
+                    if(tableau[getIndexDirection(P, N)] >= 100 && tableau[getIndexDirection(P, N)] <= 300)
+                        test += tableau[getIndexDirection(P, N)];
+
+                if(tableauPos[S] == 0)
+                    if(tableau[getIndexDirection(P, S)] >= 100 && tableau[getIndexDirection(P, S)] <= 300)
+                        test += tableau[getIndexDirection(P, S)];
+
+                if(tableauPos[E] == 0)
+                    if(tableau[getIndexDirection(P, E)] >= 100 && tableau[getIndexDirection(P, E)] <= 300)
+                        test += tableau[getIndexDirection(P, E)];
+
+                if(tableauPos[O] == 0)
+                    if(tableau[getIndexDirection(P, O)] >= 100 && tableau[getIndexDirection(P, O)] <= 300)
+                        test += tableau[getIndexDirection(P, O)];
+
+                if( ( caseIsAvailable(testPosition, tableau) || ( tableau[getIndex(testPosition)] >= -300 && tableau[getIndex(testPosition)] <= -100 ) ) && test > meilleurPositionNmbCotes) {
+                    poisitionParfaite = testPosition;
+                    meilleurPositionNmbCotes = test;
+                }
             }
         }
     }
