@@ -262,7 +262,7 @@ void ia(int* tableau) {
                     if(tableau[getIndexDirection(P, O)] >= 100 && tableau[getIndexDirection(P, O)] <= 300)
                         test += tableau[getIndexDirection(P, O)];
 
-                if( ( caseIsAvailable(testPosition, tableau) || ( tableau[getIndex(testPosition)] >= -300 && tableau[getIndex(testPosition)] <= -100 ) ) && test > meilleurPositionNmbCotes) {
+                if( ( caseIsAvailable(testPosition, tableau) || ( tableau[getIndex(testPosition)] > -300 && tableau[getIndex(testPosition)] <= -100 ) ) && test > meilleurPositionNmbCotes) {
                     poisitionParfaite = testPosition;
                     meilleurPositionNmbCotes = test;
                 }
