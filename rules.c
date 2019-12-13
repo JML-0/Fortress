@@ -177,23 +177,16 @@ int * show(int * T)
                 {
                     case -300 ... -100: //tour -
                         if (_nextTowers[E] == 1) setValue(p, E, T, R, 0); // pas de tour à l'Est
-                        
                         if (_nextTowers[S] == 1) setValue(p, S, T, R, 0);
-
                         if (_nextTowers[O] == 1) setValue(p, O, T, R, 0);
-                        
                         if (_nextTowers[N] == 1) setValue(p, N, T, R, 0);
-
                         R[getIndex(p)] = T[getIndex(p)]; //Tour
 
                         break;
                     case 100 ... 300: //tour +
                         if (_nextTowers[E] == 1) setValue(p, E, T, R, 1);
-                        
                         if (_nextTowers[S] == 1) setValue(p, S, T, R, 1);
-
                         if (_nextTowers[O] == 1) setValue(p, O, T, R, 1);
-                        
                         if (_nextTowers[N] == 1) setValue(p, N, T, R, 1);
 
                         R[getIndex(p)] = T[getIndex(p)];
