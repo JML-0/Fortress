@@ -103,7 +103,7 @@ void afficherTableau(int* tableau) {
 }
 
 int someoneWin(int* tableau) {
-    int stillPlayer = 0, stillIA = 0;
+    int scorePlayer = 0, scoreIA = 0;
     Point P;
 
     for(int i = 0; i < WIDTH; i++) {
@@ -112,24 +112,27 @@ int someoneWin(int* tableau) {
             
             switch(tableau[getIndex(P)]) {
                 case 100 ... 300:
-                    stillPlayer = 1;
+                    scorePlayer += tableau[getIndex(P)];
                     break;
 
                 case -300 ... -100:
-                    stillIA = 1;
+                    scoreIA += (0 - tableau[getIndex(P)]) ;
+                    break;
+
+                default:
+                    return 0;
                     break;
             }
         }
     }
 
-    if(stillPlayer && stillIA)
-        return 0;
-
-    if(!stillIA)
+    if(scorePlayer > scoreIA)
         return 1;
 
-    if(!stillPlayer)
+    if(scoreIA > scorePlayer)
         return 2;
+
+    return 0;
 }
 
 void jouer(int* tableau) {
