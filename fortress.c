@@ -167,6 +167,7 @@ void jouer(int* tableau) {
             }
         }
         
+        show(tableau);
         ia(tableau);
 
         switch(someoneWin(show(tableau))) {
