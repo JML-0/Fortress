@@ -56,29 +56,28 @@ int caseIsAvailable(Point P, int * T)
  */
 int * nextTowers(Point P, int * T)
 {
-    Point p; p.x = P.x; p.y = P.y;
     int * R;
     R = malloc(sizeof(int) * 4); assert(R);
 
-    p.y -= 1;
-    if (p.y < 0) R[N] = -1;
+    P.y -= 1;
+    if (P.y < 0) R[N] = -1;
     else
-    R[N] = caseIsAvailable(p, T);
+    R[N] = caseIsAvailable(P, T);
 
-    p.y += 1; p.x += 1;
-    if (p.x > LENGTH - 1) R[E] = -1;
+    P.y += 1; P.x += 1;
+    if (P.x > LENGTH - 1) R[E] = -1;
     else
-    R[E] = caseIsAvailable(p, T);
+    R[E] = caseIsAvailable(P, T);
     
-    p.y += 1; p.x -= 1;
-    if (p.y > WIDTH - 1) R[S] = -1;
+    P.y += 1; P.x -= 1;
+    if (P.y > WIDTH - 1) R[S] = -1;
     else
-    R[S] = caseIsAvailable(p, T);
+    R[S] = caseIsAvailable(P, T);
     
-    p.y -= 1; p.x -= 1;
-    if (p.x < 0) R[O] = -1;
+    P.y -= 1; P.x -= 1;
+    if (P.x < 0) R[O] = -1;
     else
-    R[O] = caseIsAvailable(p, T);
+    R[O] = caseIsAvailable(P, T);
     
     return R;
 }
@@ -141,10 +140,10 @@ void deleteTowers(int * T)
             Total = TN + TE + TS + TO; //Somme des valeurs des tours adjacentes
 
             if ((Tower > 0) && (Tower + Total < 0)) //Tour +
-                T[getIndex(P)] = Total / 100;
+                T[getIndex(P)] = 0;
 
             if ((Tower < 0) && (Tower + Total > 0)) // Tour -
-                T[getIndex(P)] = Total / 100;
+                T[getIndex(P)] = 0;
         }        
     }
     free(_nextTowers);
