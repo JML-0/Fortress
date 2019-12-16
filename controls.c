@@ -19,9 +19,9 @@ int caseValue(Point P, int * T)
 int caseValueIA(Point P, int * T)
 {
     int V = T[getIndex(P)];
-    if (V >= 0 && V < -100)    return -100;
-    if (V >= -100 && V < -300) return V + -100;
-    if (V == +1)               return V + -101;
+    if (V >= -100 && V < 0)    return -100;
+    if (V >= -300 && V < -100) return V + -100;
+    if (V == 1)               return V + -101;
     return 0;
 }
 

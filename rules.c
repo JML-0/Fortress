@@ -27,6 +27,30 @@ int getIndexDirection(Point P, Direction D)
 }
 
 /*
+ * Retourne un point en fonction d'une direction
+ */
+Point getPointDirection(Point P, Direction D)
+{
+    Point p;
+    switch (D)
+    {
+    case N:
+        p.y = P.y - 1;
+        p.x = P.x;
+    case E:
+        p.y = P.y;
+        p.x = P.x + 1;
+    case S:
+        p.y = P.y + 1;
+        p.x = P.x;
+    case O:
+        p.y = P.y;
+        p.x = P.x - 1;
+    }
+    return p;
+}
+
+/*
  * Vérifie si une case est disponible (1) ou pas (0)
  */
 int caseIsAvailable(Point P, int * T)
