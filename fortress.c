@@ -268,7 +268,6 @@ void ia(int* tableau) {
                         test += tableau[getIndexDirection(P, O)];
 
                 if( ( caseIsAvailable(testPosition, tableau) || (( tableau[getIndex(testPosition)] > -300 && tableau[getIndex(testPosition)] <= 100 ) || tableau[getIndex(testPosition)] == 99) ) && test > meilleurPositionNmbCotes) {
-                    printf("\nTOTAL: %d\n", 0 - (tableau[getIndex(testPosition)] - 100));
                     if(0 - (tableau[getIndex(testPosition)] - 100) >= test) {
                         poisitionParfaite = testPosition;
                         meilleurPositionNmbCotes = test;
