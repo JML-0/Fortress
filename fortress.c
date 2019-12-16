@@ -288,22 +288,6 @@ void ia(int* tableau) {
                 P.x = ib; P.y = i;
                 tableauPos = nextTowers(testPosition, tableau);
 
-                if(tableauPos[N] == 0)
-                    if((tableau[getIndexDirection(P, N)] >= 100 && tableau[getIndexDirection(P, N)] <= 300) || tableau[getIndexDirection(P, N)] == 99)
-                        test += tableau[getIndexDirection(P, N)];
-
-                if(tableauPos[S] == 0)
-                    if((tableau[getIndexDirection(P, S)] >= 100 && tableau[getIndexDirection(P, S)] <= 300) || tableau[getIndexDirection(P, S)] == 99)
-                        test += tableau[getIndexDirection(P, S)];
-
-                if(tableauPos[E] == 0)
-                    if((tableau[getIndexDirection(P, E)] >= 100 && tableau[getIndexDirection(P, E)] <= 300) || tableau[getIndexDirection(P, E)] == 99)
-                        test += tableau[getIndexDirection(P, E)];
-
-                if(tableauPos[O] == 0)
-                    if((tableau[getIndexDirection(P, O)] >= 100 && tableau[getIndexDirection(P, O)] <= 300) || tableau[getIndexDirection(P, O)] == 99)
-                        test += tableau[getIndexDirection(P, O)];
-
                 if( ( caseIsAvailable(testPosition, tableau) || (( tableau[getIndex(testPosition)] > -300 && tableau[getIndex(testPosition)] <= 100 ) || tableau[getIndex(testPosition)] == 99) )) {
                     poisitionParfaite = testPosition;
                 }
